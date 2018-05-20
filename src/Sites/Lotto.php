@@ -38,10 +38,17 @@ class Lotto implements Site
 
         $result->setDate($this->formatDate($date));
 
-        $node->filter('td .resultsItem .number')
+        $node->filter('td .sortkolejnosc .number')
             ->each(function($num) use ($result) {
                 $result->addToResult($num->text());
             });
+
+        if (empty($result->getResult())) {
+            $node->filter('td .resultsItem .number')
+                ->each(function($num) use ($result) {
+                    $result->addToResult($num->text());
+                });
+        }
 
         return $result;
     }
