@@ -1,0 +1,20 @@
+{
+    "name": "andrzej/lotto-spider",
+    "authors": [
+        {
+            "name": "Andrzej Kretowicz",
+            "email": "andrzej@kofeinka.net"
+        }
+    ],
+    "require": {
+        "symfony/dom-crawler": "^4.0",
+        "react/event-loop": "^0.5.2",
+        "react/http": "^0.8.3",
+        "react/http-client": "^0.5.9",
+        "symfony/css-selector": "^4.0",
+        "nategood/commando": "^0.2.9"
+    },
+    "autoload": {
+        "psr-4": {"def\\": "src/"}
+    }
+}
