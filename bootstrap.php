@@ -28,6 +28,10 @@ if (! $cli['database']) {
     $app->onDone(function($game) use ($data, $json) {
         $json->saveResult($game);
     });
+
+    if ($cli['save']) {
+        echo sprintf("Saved to file %s\n", $cli['save']);
+    }
 }
 
 if ($cli['database']) {
