@@ -18,6 +18,7 @@ class Application
     protected $collector;
     protected $done;
     protected $writeStream;
+    protected $pageFactory;
 
     public function __construct(ApplicationFactory $factory)
     {
@@ -27,6 +28,7 @@ class Application
         $this->parserFactory = $factory->getParserFactory();
         $this->gameFactory = $factory->getGameFactory();
         $this->collector = $factory->getGameCollector();
+        $this->pageFactory = $factory->getPageFactory();
     }
 
     public function run()
@@ -39,7 +41,7 @@ class Application
             });
 
             foreach ($this->siteFactory->createAll() as $site) {
-                $this->crawler->crawl($site, $this->parserFactory, $this->gameFactory, $this->collector);
+                $this->crawler->crawl($site, $this->parserFactory, $this->gameFactory, $this->collector, $this->pageFactory);
             }
 
             $this->loop->run();

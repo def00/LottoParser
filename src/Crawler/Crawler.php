@@ -10,6 +10,8 @@ namespace def\Crawler;
 
 use def\Collectors\GameCollector;
 use def\Model\GameFactory;
+use def\Model\Page;
+use def\Model\PageFactory;
 use def\Sites\Site;
 use React\HttpClient\Client;
 
@@ -22,14 +24,29 @@ class Crawler
         $this->client = $client;
     }
 
-    public function crawl(Site $site, ParserFactory $parserFactory, GameFactory $gameFactory, GameCollector $collector)
+    public function crawl(
+        Site $site,
+        ParserFactory $parserFactory,
+        GameFactory $gameFactory,
+        GameCollector $collector,
+        PageFactory $pageFactory
+    )
     {
         $request = $this->client->request('GET', $site->getAddress());
 
-        $request->on('response', function($response) use ($site, $parserFactory, $gameFactory, $collector) {
-            $response->on('data', function($html) use ($site, $parserFactory, $gameFactory, $collector) {
-                $parserFactory->create($html)->parse($site, $gameFactory, $collector);
+        $request->on('response', function($response) use ($site, $parserFactory, $gameFactory, $collector, $pageFactory) {
+            $html = $pageFactory->create();
+
+            $response->on('data', function($data) use ($html) {
+                $html->addChunk($data);
+
             });
+
+            $response->on('end', function() use ($html, $site, $parserFactory, $gameFactory, $collector) {
+                $parserFactory->create($html->getHtml())->parse($site, $gameFactory, $collector);
+            });
+
+
 
         });
 

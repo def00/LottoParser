@@ -13,6 +13,7 @@ use def\Collectors\GameCollector;
 use def\Crawler\Crawler;
 use def\Crawler\ParserFactory;
 use def\Model\GameFactory;
+use def\Model\PageFactory;
 use def\Sites\SiteFactory;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
@@ -26,6 +27,7 @@ class ApplicationFactory
     protected $parserFactory;
     protected $gameFactory;
     protected $gameCollector;
+    protected $pageFactory;
 
     public function getLoop(): LoopInterface
     {
@@ -79,5 +81,14 @@ class ApplicationFactory
         }
 
         return $this->gameCollector;
+    }
+
+    public function getPageFactory(): PageFactory
+    {
+        if (! $this->pageFactory) {
+            $this->pageFactory = new PageFactory();
+        }
+
+        return $this->pageFactory;
     }
 }
