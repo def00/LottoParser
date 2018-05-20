@@ -13,10 +13,13 @@ use def\Model\Game;
 class GameCollector
 {
     protected $games = [];
+    protected $func;
 
     public function addGame(Game $game)
     {
         $this->games[] = $game;
+        $f = $this->func;
+        $f($game);
     }
 
     public function getGames(): array
@@ -26,8 +29,7 @@ class GameCollector
 
     public function withGame(callable $func)
     {
-        foreach ($this->games as $game) {
-            $func($game);
-        }
+        $this->func = $func;
     }
+
 }

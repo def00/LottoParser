@@ -17,6 +17,7 @@ class Application
     protected $gameFactory;
     protected $collector;
     protected $done;
+    protected $writeStream;
 
     public function __construct(ApplicationFactory $factory)
     {
@@ -31,6 +32,12 @@ class Application
     public function run()
     {
         try {
+            $done = $this->done;
+
+            $this->collector->withGame(function($game) use ($done) {
+                $done($game);
+            });
+
             foreach ($this->siteFactory->createAll() as $site) {
                 $this->crawler->crawl($site, $this->parserFactory, $this->gameFactory, $this->collector);
             }
@@ -38,11 +45,6 @@ class Application
             $this->loop->run();
 
 
-            $done = $this->done;
-
-            if (is_callable($done)) {
-                $done($this->collector);
-            }
         } catch (\Exception $resultError) {
             echo "There was an error, try again\n";
         }

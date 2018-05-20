@@ -23,34 +23,22 @@ $app = new \def\Application(new \def\ApplicationFactory());
 
 
 if (! $cli['database']) {
-    $data = [];
-    $app->onDone(function($collector) use ($data, $cli) {
-        foreach ($collector->getGames() as $game) {
-            $data[] = $game->toArray();
-        }
+    $json = new \def\Database\SaveToJSON($cli['save']);
 
-        if (! $cli['save']) {
-            echo json_encode($data, JSON_PRETTY_PRINT) . "\n";
-        }
-
-        if ($cli['save']) {
-            file_put_contents($cli['save'], json_encode($data));
-            echo sprintf("Saved to file in JSON format %s\n", $cli['save']);
-
-        }
+    $app->onDone(function($game) use ($data, $json) {
+        $json->saveResult($game);
     });
 }
 
 if ($cli['database']) {
-    $app->onDone(function($collector) use ($data, $cli) {
-        $db = new def\Database\SaveToDb($cli['database']);
-        $db->createResultTable();
-        foreach ($collector->getGames() as $game) {
-            $db->saveResult($game);
-        }
+    $db = new def\Database\SaveToDb($cli['database']);
+    $db->createResultTable();
 
-        echo sprintf("Saved to database %s\n", $cli['database']);
+    $app->onDone(function($game) use ($data, $cli, $db) {
+        $db->saveResult($game);
+
     });
+    echo sprintf("Saved to database %s\n", $cli['database']);
 }
 
 
