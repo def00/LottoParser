@@ -36,6 +36,8 @@ class Application
             }
 
             $this->loop->run();
+
+
             $done = $this->done;
 
             if (is_callable($done)) {

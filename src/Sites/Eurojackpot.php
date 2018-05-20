@@ -26,6 +26,9 @@ class Eurojackpot extends Lotto implements Site
         $result->setDate($this->formatDate($date));
         $node->filter('td .sortrosnaco .text-center')
             ->each(function($num) use ($result) {
+                if ($num->text() == '+') {
+                    return;
+                }
                 $result->addToResult($num->text());
             });
 
